@@ -6,7 +6,7 @@ CREATE TABLE users(
     email text NOT NULL CHECK(email != '') UNIQUE,
     gender varchar(30),
     is_subscribe boolean NOT NULL,
-    birthday date,
+    birthday date CHECK(birthday < current_date),
     foot_size smallint,
     height numeric(3, 2) CONSTRAINT too_high_user CHECK(height < 3.0)
 );
@@ -22,7 +22,7 @@ INSERT INTO users VALUES
 
 
 INSERT INTO users VALUES
-('Petr','Petrov','mail23','male',true,'1970-09-15',NULL,2.10);
+('John','Doe','johndoe@gmail.com','male',false,'2023-01-21',48,1.85);
 
 
 // CONSTRAINT
