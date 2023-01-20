@@ -1,20 +1,17 @@
-CREATE TABLE books(
+DROP TABLE orders;
+
+CREATE TABLE orders(
     id serial PRIMARY KEY,
-    author varchar(256),
-    name varchar(256),
-    year varchar(4),
-    publisher varchar(256),
-    category varchar(256),
-    synopsys text,
-    quantity int,
-    status varchar(100)
+    created_at timestamp NOT NULL DEFAULT current_timestamp,
+    customer_id int REFERENCES users(id)
 );
 
-ALTER TABLE books
-ADD CONSTRAINT "quantity_more_zero" CHECK(quantity >= 0);
+ALTER TABLE users
+ADD COLUMN id serial PRIMARY KEY;
 
-ALTER TABLE books
-ADD CONSTRAINT "author_name" CHECK(author != '' AND name != '');
-
-ALTER TABLE books
-ADD CONSTRAINT "author_name" UNIQUE(author, name);
+CREATE TABLE orders_to_products (
+    order_id int REFERENCES orders(id),
+    product_id int REFERENCES products(id),
+    quantity int,
+    PRIMARY KEY(order_id, product_id)
+);
