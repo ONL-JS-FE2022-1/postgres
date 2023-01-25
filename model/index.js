@@ -4,7 +4,7 @@ const { configs } = require('../configs');
 
 const client = new Client(configs);
 
-User._client = configs;
+User._client = client;
 User._tableName = 'users';
 
 module.exports = {

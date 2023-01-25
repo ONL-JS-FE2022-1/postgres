@@ -4,16 +4,16 @@ class User {
   static _client;
   static _tableName;
 
-  static findAll() {
-    return this._client.query(`SELECT * FROM ${this._tableName}`);
+  static async findAll() {
+    return await this._client.query(`SELECT * FROM ${this._tableName}`);
   }
 
-  static bulkCreate(users) {
-    return this._client.query(
+  static async bulkCreate(usersArray) {
+    return await this._client.query(
       `INSERT INTO ${
         this._tableName
       } (first_name, last_name, email, is_subscribe, birthday, gender) VALUES
-            ${mapUsers(users)}`
+            ${mapUsers(usersArray)} RETURNING id`
     );
   }
 }
