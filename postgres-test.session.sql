@@ -53,3 +53,5 @@ CREATE TABLE orders_to_products(
     quantity int,
     PRIMARY KEY(order_id, product_id)
 );
+
+DELETE FROM products;
