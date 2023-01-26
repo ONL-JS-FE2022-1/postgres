@@ -5,11 +5,11 @@ const { generatePhones } = require('./utils');
 async function start() {
   await client.connect();
 
-  // const userArray = await getUsers();
-  // const res = await User.bulkCreate(userArray);
-  const { rows: users } = await User.findAll();
-  const phones = await Phone.bulkCreate(generatePhones(100));
-  const orders = await Order.bulkCreate(users, phones);
+  const userArray = await getUsers(); // запрос на АПІ (randomuser)
+  const res = await User.bulkCreate(userArray); // вставка userArray в таблицю users
+  const { rows: users } = await User.findAll(); // запрос к таблиці users на получення всіх користувачів з таблиці
+  const phones = await Phone.bulkCreate(generatePhones(100)); // генеруєте 100 рандомних телефонів + додаєте їх у таблицю products
+  const orders = await Order.bulkCreate(users, phones); // генерація замовлень для юзерів
 
   await client.end();
 }

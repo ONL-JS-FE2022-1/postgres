@@ -1,32 +1,112 @@
-SELECT id, first_name FROM users;
+SELECT * FROM users
+WHERE first_name = 'Anton';
 
-SELECT first_name, last_name, gender FROM users WHERE gender = 'male';
+------
+
+SELECT * FROM users
+WHERE first_name IN ('William', 'Anton', 'John');
+
+------
+
+-- Знайти всх юзерів, у яких id між 460 і 500
+
+SELECT * FROM users
+WHERE id >= 460 AND id <= 500; --v1
+
+SELECT * FROM users
+WHERE id BETWEEN 460 AND 500; --v2
 
 /*
-Зробіть запит, щоб отримати всіх користувачів, які підписані на наші новини.
+Знайдіть всіх юзерів, id яких знаходиться в діапазоні від 50 до 100
 */
 
-SELECT * FROM users WHERE is_subscribe;
+SELECT * FROM users
+WHERE id >= 50 AND id <= 100; -- V1
 
-SELECT * FROM users WHERE height IS NOT NULL;
+SELECT * FROM users
+WHERE id BETWEEN 50 AND 100; --V2
+
+------
+
+SELECT * FROM users
+WHERE first_name LIKE 'K%';
+
+SELECT * FROM users
+WHERE first_name LIKE '_____';
+
+SELECT * FROM users
+WHERE first_name LIKE 'A__';
 
 /*
-1. Вибрати всіх юзерів, в кого парний id
 
-2. Вибрати всіх юзерів, в кого зріст більше 1.5
+    %  - будь-яка кількість будь-яких символів
+    
+    _  - 1 будь-який символ
 
-3. Вибрати всіх юзерів чоловічої статі, які підписані на наші новини
 
 */
 
---1
+--Знайдіть всіх юзерів, у яких ім'я закінчуєть на букву "а".
 
-SELECT * FROM users WHERE id % 2 = 0;
+SELECT * FROM users
+WHERE first_name LIKE '%a';
 
---2
+------
+ALTER TABLE users
+ADD COLUMN weight int CHECK (weight != 0 AND weight > 0);
 
-SELECT * FROM users WHERE height >= 1.5;
+------
+UPDATE users
+SET weight = 56
+WHERE id = 53;
 
---3
+SELECT * FROM users
+WHERE gender = 'female';
 
-SELECT * FROM users WHERE gender = 'male' AND is_subscribe;
+------
+/*
+Є таблиця співробітників (employees)
+
+
+В кожного співробітника є стовпець salary (з/п), work_hours (кількість відпрацьованих годин за місяць)
+
+
+Всім співробітникам, які відпрацювали більше 150 годин, збільшити з/п на 20%
+*/
+
+CREATE TABLE employees(
+    id serial PRIMARY KEY,
+    name varchar(256) NOT NULL CHECK (name != ''),
+    salary int NOT NULL CHECK (salary > 0),
+    work_hours int NOT NULL CHECK (salary >= 0)
+);
+
+INSERT INTO employees (name, salary, work_hours) VALUES
+('Ivanov', 300, 100),
+('Petrov', 500, 80),
+('Sidorov', 700, 230);
+
+UPDATE employees
+SET salary = salary * 1.2
+WHERE work_hours > 150;
+
+DROP TABLE employees;
+
+------
+
+INSERT INTO users
+(first_name, last_name, email, gender, birthday, is_subscribe) VALUES
+('Usertest', 'Test', 'test@mail.com', 'male', '2003-09-12', false) RETURNING id;
+
+DELETE FROM users
+WHERE id = 502
+RETURNING *;
+
+UPDATE users
+SET weight = 56
+WHERE id = 502
+RETURNING *;
+
+
+SELECT * FROM users
+WHERE id = 502;
