@@ -1,18 +1,20 @@
-SELECT * FROM users
-LIMIT 10
-OFFSET 20;
+SELECT id, concat(first_name, ' ', last_name) AS "full name" FROM users;
 
---1 страничка - 0
---задача: получить 3 страничку
---LIMIT * (OFFSET-1)
---10*2=20
+/*
 
+Знайдіть всіх користувачів, повне ім'я (ім'я + прізвище) яких > 5 символів
 
+*/
 
+--v1
+SELECT id, concat(first_name, ' ', last_name) AS "full name"
+FROM users
+WHERE char_length(concat(first_name, ' ', last_name)) > 15;
 
---задача: получить 9 страничку, при том, что LIMIT = 15
-
---LIMIT = 15
---найти: 9 страничку - ?
---9 страничка: LIMIT * (OFFSET-1)
---9 страничка: 15 * 8 = 120
+--v2
+SELECT *
+FROM (
+    SELECT id, concat(first_name, ' ', last_name) AS "full name"
+    FROM users
+) AS "FN"
+WHERE char_length("FN"."full name") > 15;
