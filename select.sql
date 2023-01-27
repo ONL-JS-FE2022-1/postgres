@@ -1,10 +1,18 @@
-SELECT *, extract('years'from age(birthday)) AS years 
-FROM users
-WHERE extract('years'from age(birthday)) BETWEEN 20 AND 40;
+SELECT * FROM users
+LIMIT 10
+OFFSET 20;
 
-SELECT first_name AS "Ім'я", 
-last_name AS "Прізвище", 
-id AS "Особистий номер" 
-FROM users;
+--1 страничка - 0
+--задача: получить 3 страничку
+--LIMIT * (OFFSET-1)
+--10*2=20
 
-SELECT * FROM orders_to_products AS "Чек";
+
+
+
+--задача: получить 9 страничку, при том, что LIMIT = 15
+
+--LIMIT = 15
+--найти: 9 страничку - ?
+--9 страничка: LIMIT * (OFFSET-1)
+--9 страничка: 15 * 8 = 120
