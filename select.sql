@@ -57,4 +57,19 @@ LIMIT 5;
 SELECT count(*), extract('years' from age(birthday)) AS age
 FROM users
 GROUP BY age
+HAVING count(*) >= 6
 ORDER BY age;
+
+---HAVING
+
+
+SELECT sum(quantity), brand
+FROM products
+GROUP BY brand
+HAVING sum(quantity) > 10000;
+
+
+SELECT product_id, sum(quantity)
+FROM orders_to_products
+GROUP BY product_id
+HAVING sum(quantity) > 50;
