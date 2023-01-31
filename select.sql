@@ -137,3 +137,12 @@ FROM products AS p
 JOIN orders_to_products AS otp
 ON p.id = otp.product_id
 WHERE p.brand = 'Samsung';
+
+
+---топ продаж
+SELECT p.brand, count(*) AS "quantity"
+FROM products AS p
+JOIN orders_to_products AS otp
+ON p.id = otp.product_id
+GROUP BY p.brand
+ORDER BY "quantity" DESC;
