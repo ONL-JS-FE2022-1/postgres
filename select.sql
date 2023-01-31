@@ -146,3 +146,30 @@ JOIN orders_to_products AS otp
 ON p.id = otp.product_id
 GROUP BY p.brand
 ORDER BY "quantity" DESC;
+
+
+----------------------------юзери і кількість їх замовлень
+
+SELECT count(*), u.*
+FROM users AS u
+JOIN orders AS o
+ON u.id = o.customer_id
+GROUP BY u.id;
+
+-------------LEFT JOIN
+
+--v1
+SELECT *
+FROM users AS u
+LEFT JOIN orders AS o
+ON u.id = o.customer_id
+WHERE o.customer_id IS NULL;
+
+--v2
+SELECT *
+FROM users
+WHERE id IN (
+    SELECT id FROM users
+    EXCEPT
+    SELECT customer_id FROM orders
+);
