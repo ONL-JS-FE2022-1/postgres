@@ -1,75 +1,139 @@
---- ASC - за збільшенням
---- DESC - за зменшенням
+CREATE TABLE A
+(
+    v char(3),
+    t int
+);
 
-SELECT * FROM users
-ORDER BY birthday,
-         first_name;
+CREATE TABLE B
+(
+    v char(3)
+);
 
-UPDATE users
-SET birthday = '1940-05-12'
-WHERE id BETWEEN 5 AND 10;
+INSERT INTO A VALUES
+('XXX', 1), --5
+('XXY', 1), --10
+('XXZ', 1), --15
+('XYX', 2), --20
+('XYY', 2), --25
+('XYZ', 2), --30
+('YXX', 3), --35
+('YXY', 3), --40
+('YXZ', 3); --45
 
+INSERT INTO B VALUES
+('ZXX'), ('XXX'), ('ZXZ'), ('YXZ'), ('YXY');
+
+SELECT * FROM A, B;
+
+---- UNION - об'єднання (все те, що в А + все те, що в В, а те, що є і там, і там - в 1 екземплярі)
+---- INTERSECT (перетин) - все те, що є і в A, і в B, в єдиному екземплярі
+---- Різниця
+    ---- А мінус В - все з А мінус спільні елементи для А і В,
+    ---- В мінус А - все з В мінус спільні елементи для А і В
+
+
+
+
+SELECT v FROM A
+UNION
+SELECT * FROM B;
+
+SELECT v FROM A
+INTERSECT
+SELECT * FROM B;
+
+SELECT v FROM A
+EXCEPT
+SELECT * FROM B;
+
+INSERT INTO users (
+    first_name,
+    last_name,
+    email,
+    gender,
+    is_subscribe,
+    birthday
+  )
+VALUES (
+    'User1',
+    'Test1',
+    'mail@1',
+    'male',
+    true,
+    '1954-09-15'
+  ),
+  (
+    'User3',
+    'Test3',
+    'mail@3',
+    'male',
+    true,
+    '1954-04-15'
+  ),
+  (
+    'User2',
+    'Test2',
+    'mail@2',
+    'male',
+    true,
+    '1954-07-15'
+  )
+  ;
+
+
+  ---- id юзерів, які робили замовлення
+
+  SELECT id FROM users
+  INTERSECT
+  SELECT customer_id FROM orders;
+
+
+  -- id юзерів, які ніколи не робили замовлень
+    SELECT id FROM users
+    EXCEPT
+    SELECT customer_id FROM orders;
+
+
+-----------------
+
+SELECT A.v AS "id",
+        A.t AS "price",
+        B.v AS "phone_id"
+ FROM A, B
+WHERE A.v = B.v;
 
 SELECT *
-FROM products
-ORDER BY quantity ASC
-LIMIT 3;
-
-/*
-
-1. Відсортувати юзерів за віком (кількістю повних років)
-2. Відсортуйте телефони за ціною, від найдорожчого до найдешевшого
-3. Виведіть топ-5 телефонів, які частіше за все купують (більше за все продано)
-4*. Знайти кількість однорічок (кількість юзерів з однаковою кількістю повних років)
-
-*/
+FROM A JOIN B
+ON A.v = B.v;
 
 
-----1
---v1
-SELECT *, extract('years' from age(birthday))
-FROM users
-ORDER BY extract('years' from age(birthday));
+-------------------------------------
+---Знайти всі замовлення юзера, у якого id = 5
 
---v2
+SELECT u.*, o.id AS "order_id" 
+FROM users AS u
+JOIN orders AS o
+ON o.customer_id = u.id
+WHERE u.id = 5;
+
+
+
+-----------------------------
 SELECT *
-FROM (
-    SELECT *, extract('years' from age(birthday)) AS age
-    FROM users
-) AS "u_w_age"
-ORDER BY "u_w_age".age;
+FROM A 
+JOIN B ON A.v = B.v
+JOIN products ON A.t = products.id;
 
-
-----2
+------Знайти id всіх замовлень, де були замовлені телефони Samsung
 SELECT *
-FROM products
-ORDER BY price DESC;
+FROM products AS p
+JOIN orders_to_products AS otp
+ON p.id = otp.product_id
+WHERE p.brand = 'Samsung';
 
-----3
-SELECT product_id, sum(quantity)
-FROM orders_to_products
-GROUP BY product_id
-ORDER BY sum(quantity) DESC
-LIMIT 5;
-
-
-----4
-SELECT count(*), extract('years' from age(birthday)) AS age
-FROM users
-GROUP BY age
-HAVING count(*) >= 6
-ORDER BY age;
-
----HAVING
-
-
-SELECT sum(quantity), brand
-FROM products
-GROUP BY brand
-HAVING sum(quantity) > 10000;
-
-
-SELECT product_id, sum(quantity)
-FROM orders_to_products
-GROUP BY product_id
-HAVING sum(quantity) > 50;
+-----Порахуйте, скільки замовлень бренду Samsung було всього
+SELECT count(*)
+FROM products AS p
+JOIN orders_to_products AS otp
+ON p.id = otp.product_id
+WHERE p.brand = 'Samsung';
