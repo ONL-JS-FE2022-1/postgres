@@ -160,8 +160,8 @@ GROUP BY u.id;
 
 --v1
 SELECT *
-FROM users AS u
-LEFT JOIN orders AS o
+FROM orders AS o
+RIGHT JOIN users AS u
 ON u.id = o.customer_id
 WHERE o.customer_id IS NULL;
 
@@ -173,3 +173,29 @@ WHERE id IN (
     EXCEPT
     SELECT customer_id FROM orders
 );
+
+INSERT INTO products (
+    brand,
+    model,
+    category,
+    price,
+    quantity
+  )
+VALUES (
+    'LG',
+    '10',
+    'phones',
+    200,
+    2
+  );
+
+  /*
+Знайдіть всі телефони, які ніхто ніколи не купував
+Підказка. Об'єднуйте таблицю orders_to_products і таблицю products
+  */
+
+  SELECT *
+  FROM products AS p
+  LEFT JOIN orders_to_products AS otp
+  ON p.id = otp.product_id
+  WHERE otp.product_id IS NULL;
