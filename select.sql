@@ -287,3 +287,27 @@ VALUES (
     SELECT avg(owc.cost)
     FROM owc
   );
+
+
+  --------6
+  WITH orders_with_counts AS (
+    SELECT customer_id, count(*) AS order_count
+    FROM orders
+    GROUP BY customer_id
+  )
+  SELECT orders_with_counts.order_count, users.* FROM orders_with_counts
+  JOIN users ON users.id = orders_with_counts.customer_id
+  WHERE orders_with_counts.order_count > (
+    SELECT avg(orders_with_counts.order_count)
+    FROM orders_with_counts
+  );
+
+
+  ----------7
+  SELECT u.id, u.first_name, u.last_name, sum(otp.quantity)
+  FROM users AS u
+  JOIN orders AS o
+  ON u.id = o.customer_id
+  JOIN orders_to_products AS otp
+  ON o.id = otp.order_id
+  GROUP BY u.id;
