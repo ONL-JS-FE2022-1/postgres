@@ -199,3 +199,91 @@ VALUES (
   LEFT JOIN orders_to_products AS otp
   ON p.id = otp.product_id
   WHERE otp.product_id IS NULL;
+
+  /*
+  Домашня практика 31.01.2023
+
+1. Знайти повну вартість кожного замовлення.
+2. Знайти кількість позицій в кожному замовленні.
+3. Знайти найпопулярніший товар.
+4. Прорахувати середній чек по всьому магазину.
+5. Витягти всі замовлення вище середнього чека.
+6. Витягти всіх користувачів, в яких кількість замовлень вище середньої.
+7. Витягти користуачів та кількість телефонів, які вони замовляли (кількість замовлень * quantity)
+  */
+
+  ----1
+  SELECT otp.order_id, sum(p.price * otp.quantity)
+  FROM orders_to_products AS otp
+  JOIN products AS p
+  ON otp.product_id = p.id
+  GROUP BY otp.order_id;
+
+  -----2
+  SELECT order_id, count(*)
+  FROM orders_to_products AS otp
+  GROUP BY order_id;
+
+  -----3
+  SELECT p.id, p.brand, p.model, sum(otp.quantity)
+  FROM products AS p
+  JOIN orders_to_products AS otp
+  ON p.id = otp.product_id
+  GROUP BY p.id
+  ORDER BY sum(otp.quantity) DESC
+  LIMIT 1;
+
+  ----4
+  SELECT avg(owc.cost)
+  FROM (
+    SELECT otp.order_id, sum(p.price * otp.quantity) AS cost
+    FROM orders_to_products AS otp
+    JOIN products AS p
+    ON otp.product_id = p.id
+    GROUP BY otp.order_id
+  ) AS owc;
+
+  ----5
+  SELECT owc.*
+  FROM (
+      SELECT otp.order_id, sum(p.price * otp.quantity) AS cost
+      FROM orders_to_products AS otp
+      JOIN products AS p
+      ON otp.product_id = p.id
+      GROUP BY otp.order_id
+    ) AS owc
+  WHERE owc.cost > (
+    SELECT avg(owc.cost)
+    FROM (
+      SELECT otp.order_id, sum(p.price * otp.quantity) AS cost
+      FROM orders_to_products AS otp
+      JOIN products AS p
+      ON otp.product_id = p.id
+      GROUP BY otp.order_id
+    ) AS owc
+  );
+
+
+
+
+  /*
+
+  WITH ..alias.. AS table
+  SELECT ......
+
+  */
+
+
+  WITH owc AS (
+    SELECT otp.order_id, sum(p.price * otp.quantity) AS cost
+    FROM orders_to_products AS otp
+    JOIN products AS p
+    ON otp.product_id = p.id
+    GROUP BY otp.order_id
+  )
+  SELECT owc.*
+  FROM owc
+  WHERE owc.cost > (
+    SELECT avg(owc.cost)
+    FROM owc
+  );
