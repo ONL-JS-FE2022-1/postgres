@@ -114,3 +114,35 @@ INSERT INTO students_to_teachers VALUES
 (1, 2),
 (2, 1),
 (2, 2);
+
+----4NF
+
+CREATE TABLE restaurants(
+    id serial PRIMARY KEY
+);
+
+CREATE TABLE delivery_services(
+    id serial PRIMARY KEY
+);
+
+CREATE TABLE restaurant_to_deliveries(
+    restaurant_id int REFERENCES restaurants(id),
+    delivery_id int REFERENCES delivery_services(id),
+    PRIMARY KEY(restaurant_id, delivery_id)
+);
+
+INSERT INTO restaurants_to_deliveries VALUES
+(1, 1, 'hawaii'),
+(1, 1, '4chese'),
+(1, 2, 'carbonara'),
+(1, 3, 'pepperoni');
+
+CREATE TABLE pizzas(
+    name varchar(200) PRIMARY KEY
+);
+
+CREATE TABLE pizzas_to_restaurants(
+    pizza_type varchar(200) REFERENCES pizzas(name),
+    restaurant_id int REFERENCES restaurants(id),
+    PRIMARY KEY (pizza_type, restaurant_id)
+);
