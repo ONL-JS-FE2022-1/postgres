@@ -78,3 +78,39 @@ INSERT INTO departments VALUES
 ('HR', '24-12-16'),
 ('Sales', '23-23-23'),
 ('Clojure Developer', '20-19-21');
+
+
+-------BCNF
+
+CREATE TABLE students(
+    id serial PRIMARY KEY,
+    name varchar(30)
+);
+
+CREATE TABLE teachers(
+    id serial PRIMARY KEY,
+    name varchar(30),
+    subject varchar(300) REFERENCES subjects(name) -------<------
+);
+
+CREATE TABLE students_to_teachers (
+    teacher_id int REFERENCES teachers(id),
+    student_id int REFERENCES students(id),
+    PRIMARY KEY (teacher_id, student_id)
+);
+
+INSERT INTO students_to_teachers VALUES
+(1, 1, 'biology'),
+(1, 2, 'biology'),
+(2, 1, 'math'),
+(2, 2, 'physics'); ------- problem!
+
+CREATE TABLE subjects(
+    name varchar(300) PRIMARY KEY
+);
+
+INSERT INTO students_to_teachers VALUES
+(1, 1),
+(1, 2),
+(2, 1),
+(2, 2);
