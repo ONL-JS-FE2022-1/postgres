@@ -81,3 +81,54 @@ SELECT *, (
     END
 )
 FROM users;
+
+
+
+-------Вивевсти юзерів, в яких в полі "стать" буде українською написано "жінка" або "чоловік", або "інше"
+
+SELECT *, (
+    CASE gender
+        WHEN 'female' THEN 'жінка'
+        WHEN 'male' THEN 'чоловік'
+        ELSE 'інше'
+    END
+) AS "стать"
+FROM users;
+
+
+------Вивести на основі кількості років користувача, що він повнолітній чи неповнолітній
+SELECT *, (
+    CASE
+        WHEN extract(year from age(birthday)) < 18
+        THEN 'неповнолітній'
+        WHEN extract(year from age(birthday)) >= 18
+        THEN 'повнолітній'
+        ELSE 'невідомо'
+    END
+)
+FROM users;
+
+/*
+
+Вивести користувачів з інформацією про їхні замовлення у вигляді:
+- якщо у користувача >= 3 - постійний клієнт
+- якщо у користувача від 1 до 2 - активний клієнт
+- якщо 0 замовлень - новий
+
+*/
+
+SELECT u.id, u.first_name, u.last_name, u.email, count(o.id), (
+    CASE
+        WHEN count(o.id) >= 3
+        THEN 'Постійний клієнт'
+        WHEN count(o.id) BETWEEN 1 AND 2
+        THEN 'Активний клієнт'
+        WHEN count(o.id) = 0
+        THEN 'Новий клієнт'
+        ELSE 'Клієнт'
+    END
+)
+FROM users AS u
+JOIN orders AS o
+ON u.id = o.customer_id
+GROUP BY u.id, u.first_name, u.last_name, u.email;
