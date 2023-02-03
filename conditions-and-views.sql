@@ -55,3 +55,29 @@ CASE condition WHEN value1 THEN result1
                 .........
                 ELSE default_result
 END;
+
+
+/*
+
+Витягти місяць народження юзера і на його основі вивести, в яку пору року народився юзер
+
+*/
+
+SELECT *, (
+    CASE extract('month' from birthday)
+        WHEN 1 THEN 'winter'
+        WHEN 2 THEN 'winter'
+        WHEN 3 THEN 'spring'
+        WHEN 4 THEN 'spring'
+        WHEN 5 THEN 'spring'
+        WHEN 6 THEN 'summer'
+        WHEN 7 THEN 'summer'
+        WHEN 8 THEN 'summer'
+        WHEN 9 THEN 'fall'
+        WHEN 10 THEN 'fall'
+        WHEN 11 THEN 'fall'
+        WHEN 12 THEN 'winter'
+        ELSE 'unkown'
+    END
+)
+FROM users;
