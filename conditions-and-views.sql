@@ -129,6 +129,26 @@ SELECT u.id, u.first_name, u.last_name, u.email, count(o.id), (
     END
 )
 FROM users AS u
-JOIN orders AS o
+LEFT JOIN orders AS o
 ON u.id = o.customer_id
-GROUP BY u.id, u.first_name, u.last_name, u.email;
+GROUP BY u.id, u.first_name, u.last_name, u.email
+ORDER BY count(o.id);
+
+
+
+INSERT INTO users (
+    first_name,
+    last_name,
+    email,
+    gender,
+    is_subscribe,
+    birthday
+  )
+VALUES (
+    'Iron',
+    'Man',
+    'dakdha@gmail.com',
+    'male',
+    true,
+    '2004-08-09'
+  );
