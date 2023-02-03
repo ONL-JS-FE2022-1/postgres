@@ -152,3 +152,30 @@ VALUES (
     true,
     '2004-08-09'
   );
+
+
+
+  SELECT count(*)
+  FROM products
+  WHERE price > 3000;
+
+
+SELECT sum(
+    CASE WHEN price > 3000 THEN 1
+    ELSE 0
+    END
+)
+FROM products;
+
+
+------COALESCE
+SELECT COALESCE(NULL, 12, 24) --- 12
+COALESCE(NULL, NULL, NULL) --- NULL
+
+
+UPDATE products
+SET description = 'Супер телефон з довгим описом'
+WHERE id BETWEEN 20 AND 30;
+
+SELECT id, model, price, COALESCE(description, 'Про цей товар нічого не відомо')
+FROM products;
