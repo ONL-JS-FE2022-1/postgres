@@ -179,3 +179,7 @@ WHERE id BETWEEN 20 AND 30;
 
 SELECT id, model, price, COALESCE(description, 'Про цей товар нічого не відомо')
 FROM products;
+
+
+SELECT id, brand, model, LEAST(price, discounted_price)
+FROM products;
